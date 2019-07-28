@@ -1,5 +1,11 @@
 # request
 
+[![npm](https://img.shields.io/npm/v/@swiftcarrot/request.svg)](https://www.npmjs.com/package/@swiftcarrot/request)
+[![npm](https://img.shields.io/npm/dm/@swiftcarrot/request.svg)](https://www.npmjs.com/package/@swiftcarrot/request)
+[![Build Status](https://travis-ci.org/swiftcarrot/request.svg?branch=master)](https://travis-ci.org/swiftcarrot/request)
+[![codecov](https://codecov.io/gh/swiftcarrot/request/branch/master/graph/badge.svg)](https://codecov.io/gh/swiftcarrot/request)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+
 request
 
 ```javascript
