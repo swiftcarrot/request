@@ -15,14 +15,17 @@ export class Request {
 
   timeout(ms) {
     this._timeout = ms;
+    return this;
   }
 
   base(x) {
     this._base = x;
+    return this;
   }
 
   token(x) {
     this._token = x;
+    return this;
   }
 
   getHeaders() {
@@ -43,7 +46,7 @@ export class Request {
       return resp;
     });
 
-    Promise.race([req, timeout(this._timeout)]);
+    return Promise.race([req, timeout(this._timeout)]);
   }
 
   get(path, params) {
