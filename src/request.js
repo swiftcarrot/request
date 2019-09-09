@@ -1,5 +1,4 @@
-import 'cross-fetch/polyfill';
-import qs from 'qs';
+import { encodeQueryString } from 'frontend-fns';
 
 const timeout = ms =>
   new Promise((resolve, reject) =>
@@ -50,7 +49,7 @@ export class Request {
   }
 
   get(path, params) {
-    const search = params ? `?${qs.stringify(params)}` : '';
+    const search = params ? `?${encodeQueryString(params)}` : '';
     return this.fetch(`${path}${search}`, {
       method: 'GET',
       headers: this.getHeaders()
