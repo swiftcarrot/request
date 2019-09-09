@@ -30,8 +30,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
-    "cross-fetch": "^3.0.4",
-    "frontend-fns": "^0.2.3",
-    "qs": "^6.7.0"
+    "frontend-fns": "^0.2.3"
   }
 }
