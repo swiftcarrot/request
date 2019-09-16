@@ -8,6 +8,8 @@
 
 request
 
+### Usage
+
 ```javascript
 import request from '@swiftcarrot/request';
 
@@ -19,6 +21,13 @@ req
   .then(({ token }) => req.token(token));
 req.post('/articles', { title: 'test' });
 req.delete('/logout').then(() => req.token(null));
+```
+
+### Polyfill
+
+```javascript
+// yarn add cross-fetch
+import 'cross-fetch/polyfill';
 ```
 
 ### License

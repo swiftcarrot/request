@@ -1,9 +1,5 @@
 import { encodeQueryString } from 'frontend-fns';
-
-const timeout = ms =>
-  new Promise((resolve, reject) =>
-    setTimeout(() => reject(new Error('timeout')), ms)
-  );
+import { timeout } from './utils';
 
 export class Request {
   constructor() {
