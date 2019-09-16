@@ -1,5 +1,4 @@
-import { encodeQueryString } from 'frontend-fns';
-import { timeout } from './utils';
+import { encodeQueryString, timeout, isFunction } from './utils';
 
 export class Request {
   constructor() {
@@ -18,16 +17,35 @@ export class Request {
     return this;
   }
 
-  token(x) {
-    this._token = x;
+  token(getToken) {
+    this._token = getToken;
+    return this;
+  }
+
+  headers(getHeaders) {
+    this._headers = getHeaders;
     return this;
   }
 
   getHeaders() {
+    let headers = {};
+
     if (this._token) {
-      return { Authorization: 'Bearer ' + this._token };
+      if (isFunction(this._token)) {
+        headers = { ...headers, Authorization: 'Bearer ' + this._token() };
+      } else {
+        headers = { ...headers, Authorization: 'Bearer ' + this._token };
+      }
     }
-    return {};
+
+    if (this._headers) {
+      if (isFunction(this._headers)) {
+        headers = { ...headers, ...this._headers() };
+      } else {
+        headers = { ...headers, ...this._headers };
+      }
+    }
+    return headers;
   }
 
   fetch(path, options) {
