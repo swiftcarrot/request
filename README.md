@@ -11,9 +11,10 @@ request
 ### Usage
 
 ```javascript
-import request from '@swiftcarrot/request';
+import Request from '@swiftcarrot/request';
 
-const req = request.timeout(5000).base('https://api.swiftcarrot.com');
+const req = new Request();
+req..timeout(5000).base('https://api.swiftcarrot.com');
 
 req.get('/articles', { page: 1 });
 req
