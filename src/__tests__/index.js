@@ -1,4 +1,5 @@
-import { Request } from '..';
+import Request from '../request';
+import { compactParams } from '../utils';
 
 test('base', () => {
   const req = new Request();
@@ -36,4 +37,8 @@ test('headers', () => {
   expect(req.getHeaders()).toEqual({
     locale: 'en'
   });
+});
+
+test('compactParams', () => {
+  expect(compactParams({ a: 1, b: null })).toEqual({ a: 1 });
 });

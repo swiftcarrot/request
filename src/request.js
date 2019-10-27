@@ -1,6 +1,6 @@
-import { encodeQueryString, timeout, isFunction } from './utils';
+import { encodeQueryString, timeout, isFunction, compactParams } from './utils';
 
-export class Request {
+class Request {
   constructor() {
     this._base = '';
     this._token = null;
@@ -63,16 +63,16 @@ export class Request {
   }
 
   get(path, params) {
-    const search = params ? `?${encodeQueryString(params)}` : '';
+    const search = params ? `?${encodeQueryString(compactParams(params))}` : '';
     return this.fetch(`${path}${search}`, {
       method: 'GET',
       headers: this.getHeaders()
     }).then(resp => resp.json());
   }
 
-  post(path, data) {
+  post(path, params) {
     return this.fetch(`${path}`, {
-      body: JSON.stringify(data),
+      body: JSON.stringify(compactParams(params)),
       method: 'POST',
       headers: {
         ...this.getHeaders(),
@@ -81,9 +81,9 @@ export class Request {
     }).then(resp => resp.json());
   }
 
-  put(path, data) {
+  put(path, params) {
     return this.fetch(`${path}`, {
-      body: JSON.stringify(data),
+      body: JSON.stringify(compactParams(params)),
       method: 'PUT',
       headers: {
         ...this.getHeaders(),
@@ -100,6 +100,4 @@ export class Request {
   }
 }
 
-const request = new Request();
-
-export default request;
+export default Request;
