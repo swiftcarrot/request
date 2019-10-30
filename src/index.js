@@ -1,1 +1,1 @@
-export default, { Request } from './request';
+export default from './request';

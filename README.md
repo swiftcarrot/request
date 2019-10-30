@@ -14,7 +14,7 @@ request
 import Request from '@swiftcarrot/request';
 
 const req = new Request();
-req..timeout(5000).base('https://api.swiftcarrot.com');
+req.base('https://api.swiftcarrot.com').timeout(5000);
 
 req.get('/articles', { page: 1 });
 req
@@ -22,6 +22,16 @@ req
   .then(({ token }) => req.token(token));
 req.post('/articles', { title: 'test' });
 req.delete('/logout').then(() => req.token(null));
+```
+
+### onError
+
+```javascript
+const request = new Request();
+
+request.onError(err => {
+  console.warn(err);
+});
 ```
 
 ### Polyfill
