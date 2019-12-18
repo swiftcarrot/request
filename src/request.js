@@ -1,8 +1,8 @@
 import { encodeQueryString, timeout, isFunction, compactParams } from './utils';
 
 class Request {
-  constructor() {
-    this._base = '';
+  constructor(base = '') {
+    this._base = base;
     this._token = null;
     this._timeout = 20000;
   }

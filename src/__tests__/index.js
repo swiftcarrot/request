@@ -1,6 +1,11 @@
 import Request from '../request';
 import { compactParams } from '../utils';
 
+test('constructor', () => {
+  const req = new Request('https://api.github.com');
+  expect(req._base).toBe('https://api.github.com');
+});
+
 test('base', () => {
   const req = new Request();
   expect(req._base).toBe('');
