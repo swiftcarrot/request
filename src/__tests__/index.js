@@ -14,6 +14,12 @@ test('base', () => {
   expect(req._timeout).toBe(200);
 });
 
+test('timeout', () => {
+  const req = new Request('https://api.github.com').timeout(1);
+  expect(req._base).toBe('https://api.github.com');
+  expect(req._timeout).toBe(1);
+});
+
 test('token', () => {
   const req = new Request();
   req.token('1');

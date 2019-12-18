@@ -13,8 +13,7 @@ request
 ```javascript
 import Request from '@swiftcarrot/request';
 
-const req = new Request();
-req.base('https://api.swiftcarrot.com').timeout(5000);
+const req = new Request('https://api.example.com/v1').timeout(5000);
 
 req.get('/articles', { page: 1 });
 req
@@ -34,7 +33,7 @@ request.onError(err => {
 });
 ```
 
-### Polyfill
+### add fetch Polyfill
 
 ```javascript
 // yarn add cross-fetch
