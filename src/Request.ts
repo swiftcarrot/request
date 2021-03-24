@@ -1,6 +1,6 @@
 import { encodeQueryString, timeout, isFunction, compactParams } from './utils';
 
-class Request {
+export class Request {
   constructor(base = '') {
     this._base = base;
     this._token = null;
@@ -99,5 +99,3 @@ class Request {
     });
   }
 }
-
-export default Request;
