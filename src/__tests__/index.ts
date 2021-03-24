@@ -25,28 +25,28 @@ test('token', () => {
   req.token('1');
 
   expect(req.getHeaders()).toEqual({
-    Authorization: 'Bearer 1'
+    Authorization: 'Bearer 1',
   });
 
   req.token(() => '2');
   expect(req.getHeaders()).toEqual({
-    Authorization: 'Bearer 2'
+    Authorization: 'Bearer 2',
   });
 });
 
 test('headers', () => {
   const req = new Request();
   req.headers(() => ({
-    locale: 'zh'
+    locale: 'zh',
   }));
 
   expect(req.getHeaders()).toEqual({
-    locale: 'zh'
+    locale: 'zh',
   });
 
   req.headers({ locale: 'en' });
   expect(req.getHeaders()).toEqual({
-    locale: 'en'
+    locale: 'en',
   });
 });
 

@@ -1,1 +1,3 @@
-export default from './Request';
+import Request from './Request';
+
+export default Request;

@@ -1,7 +1,9 @@
-import { encodeQueryString, timeout, isFunction, compactParams } from './utils';
+import { encode } from "./qs";
+import isFunction from "lodash/isFunction";
+import { timeout, compactParams } from "./utils";
 
-export class Request {
-  constructor(base = '') {
+export default class Request {
+  constructor(base = "") {
     this._base = base;
     this._token = null;
     this._timeout = 20000;
@@ -32,9 +34,9 @@ export class Request {
 
     if (this._token) {
       if (isFunction(this._token)) {
-        headers = { ...headers, Authorization: 'Bearer ' + this._token() };
+        headers = { ...headers, Authorization: "Bearer " + this._token() };
       } else {
-        headers = { ...headers, Authorization: 'Bearer ' + this._token };
+        headers = { ...headers, Authorization: "Bearer " + this._token };
       }
     }
 
@@ -49,11 +51,11 @@ export class Request {
   }
 
   fetch(path, options) {
-    const req = fetch(`${this._base}${path}`, options).then(resp => {
+    const req = fetch(`${this._base}${path}`, options).then((resp) => {
       if (resp.status === 401) {
-        throw new Error('401');
+        throw new Error("401");
       } else if (!resp.ok) {
-        throw new Error('network error');
+        throw new Error("network error");
       }
 
       return resp;
@@ -63,39 +65,39 @@ export class Request {
   }
 
   get(path, params) {
-    const search = params ? `?${encodeQueryString(compactParams(params))}` : '';
+    const search = params ? `?${encodeQueryString(compactParams(params))}` : "";
     return this.fetch(`${path}${search}`, {
-      method: 'GET',
-      headers: this.getHeaders()
-    }).then(resp => resp.json());
+      method: "GET",
+      headers: this.getHeaders(),
+    }).then((resp) => resp.json());
   }
 
   post(path, params) {
     return this.fetch(`${path}`, {
       body: JSON.stringify(compactParams(params)),
-      method: 'POST',
+      method: "POST",
       headers: {
         ...this.getHeaders(),
-        'Content-Type': 'application/json'
-      }
-    }).then(resp => resp.json());
+        "Content-Type": "application/json",
+      },
+    }).then((resp) => resp.json());
   }
 
   put(path, params) {
     return this.fetch(`${path}`, {
       body: JSON.stringify(compactParams(params)),
-      method: 'PUT',
+      method: "PUT",
       headers: {
         ...this.getHeaders(),
-        'Content-Type': 'application/json'
-      }
-    }).then(resp => resp.json());
+        "Content-Type": "application/json",
+      },
+    }).then((resp) => resp.json());
   }
 
   delete(path) {
     return this.fetch(`${path}`, {
-      method: 'DELETE',
-      headers: this.getHeaders()
+      method: "DELETE",
+      headers: this.getHeaders(),
     });
   }
 }
