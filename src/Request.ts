@@ -1,9 +1,9 @@
-import { encode } from "./qs";
-import isFunction from "lodash/isFunction";
-import { timeout, compactParams } from "./utils";
+import { encode } from './qs';
+import isFunction from 'lodash/isFunction';
+import { timeout, compactParams } from './utils';
 
 export default class Request {
-  constructor(base = "") {
+  constructor(base = '') {
     this._base = base;
     this._token = null;
     this._timeout = 20000;
@@ -34,9 +34,9 @@ export default class Request {
 
     if (this._token) {
       if (isFunction(this._token)) {
-        headers = { ...headers, Authorization: "Bearer " + this._token() };
+        headers = { ...headers, Authorization: 'Bearer ' + this._token() };
       } else {
-        headers = { ...headers, Authorization: "Bearer " + this._token };
+        headers = { ...headers, Authorization: 'Bearer ' + this._token };
       }
     }
 
@@ -53,9 +53,9 @@ export default class Request {
   fetch(path, options) {
     const req = fetch(`${this._base}${path}`, options).then((resp) => {
       if (resp.status === 401) {
-        throw new Error("401");
+        throw new Error('401');
       } else if (!resp.ok) {
-        throw new Error("network error");
+        throw new Error('network error');
       }
 
       return resp;
@@ -65,9 +65,9 @@ export default class Request {
   }
 
   get(path, params) {
-    const search = params ? `?${encodeQueryString(compactParams(params))}` : "";
+    const search = params ? `?${encode(compactParams(params))}` : '';
     return this.fetch(`${path}${search}`, {
-      method: "GET",
+      method: 'GET',
       headers: this.getHeaders(),
     }).then((resp) => resp.json());
   }
@@ -75,10 +75,10 @@ export default class Request {
   post(path, params) {
     return this.fetch(`${path}`, {
       body: JSON.stringify(compactParams(params)),
-      method: "POST",
+      method: 'POST',
       headers: {
         ...this.getHeaders(),
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     }).then((resp) => resp.json());
   }
@@ -86,17 +86,17 @@ export default class Request {
   put(path, params) {
     return this.fetch(`${path}`, {
       body: JSON.stringify(compactParams(params)),
-      method: "PUT",
+      method: 'PUT',
       headers: {
         ...this.getHeaders(),
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     }).then((resp) => resp.json());
   }
 
   delete(path) {
     return this.fetch(`${path}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this.getHeaders(),
     });
   }

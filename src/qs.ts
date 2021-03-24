@@ -8,15 +8,15 @@ export function encode(obj: any, prefix?: string): string {
     const value = obj[key];
     const enkey = encodeURIComponent(key);
     let pair;
-    if (typeof value === "object") {
-      pair = encode(value, prefix ? prefix + "[" + enkey + "]" : enkey);
+    if (typeof value === 'object') {
+      pair = encode(value, prefix ? prefix + '[' + enkey + ']' : enkey);
     } else {
       pair =
-        (prefix ? prefix + "[" + enkey + "]" : enkey) +
-        "=" +
+        (prefix ? prefix + '[' + enkey + ']' : enkey) +
+        '=' +
         encodeURIComponent(value);
     }
     pairs.push(pair);
   }
-  return pairs.join("&");
+  return pairs.join('&');
 }
