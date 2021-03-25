@@ -1,11 +1,8 @@
-import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json';
 
-const input = './src/index.js';
-
-const external = id => !id.startsWith('.') && !id.startsWith('/');
+const input = './src/index.ts';
+const external = (id) => !id.startsWith('.') && !id.startsWith('/');
 
 export default [
   {
@@ -15,16 +12,8 @@ export default [
       format: 'cjs'
     },
     external,
-    plugins: [
-      babel({
-        runtimeHelpers: true,
-        plugins: ['@babel/transform-runtime']
-      }),
-      nodeResolve(),
-      commonjs()
-    ]
+    plugins: [typescript()]
   },
-
   {
     input,
     output: {
@@ -32,13 +21,6 @@ export default [
       format: 'esm'
     },
     external,
-    plugins: [
-      babel({
-        runtimeHelpers: true,
-        plugins: [['@babel/transform-runtime', { useESModules: true }]]
-      }),
-      nodeResolve(),
-      commonjs()
-    ]
+    plugins: [typescript()]
   }
 ];
