@@ -1,103 +1,180 @@
-import { encode } from './qs';
 import isFunction from 'lodash/isFunction';
-import { timeout, compactParams } from './utils';
+import pickBy from 'lodash/pickBy';
+import isNil from 'lodash/isNil';
 
-export default class Request {
+export function encode(obj: any, prefix?: string): string {
+  var pairs = [];
+  for (var key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+      continue;
+    }
+
+    const value = obj[key];
+    const enkey = encodeURIComponent(key);
+    let pair;
+    if (typeof value === 'object') {
+      pair = encode(value, prefix ? prefix + '[' + enkey + ']' : enkey);
+    } else {
+      pair =
+        (prefix ? prefix + '[' + enkey + ']' : enkey) +
+        '=' +
+        encodeURIComponent(value);
+    }
+    pairs.push(pair);
+  }
+  return pairs.join('&');
+}
+
+export const timeout = (ms: number) => {
+  return new Promise((resolve, reject) =>
+    setTimeout(() => reject(new TimeoutError('Request timeout')), ms)
+  );
+};
+
+export const compactParams = (params: any) => {
+  return pickBy(params, (x) => !isNil(x));
+};
+
+export class HTTPError extends Error {
+  constructor(status: number) {
+    super();
+    this.name = 'HTTPError';
+    // this.status = status;
+  }
+}
+
+export class BadRequestError extends HTTPError {}
+
+export class UnauthorizedError extends HTTPError {}
+
+export class TimeoutError extends Error {}
+
+interface BearerTokenOptions {
+  token: string;
+  prefix?: string;
+}
+
+function resolve(fn: Function | Object) {
+  if (isFunction(fn)) {
+    return fn();
+  }
+  return fn;
+}
+
+export class Request {
+  public _base: string;
+  public _timeout: number;
+  public _bearerToken: any;
+  public _headers: any;
+
   constructor(base = '') {
     this._base = base;
-    this._token = null;
     this._timeout = 20000;
   }
 
-  timeout(ms) {
+  timeout(ms: number) {
     this._timeout = ms;
     return this;
   }
 
-  base(x) {
+  base(x: string) {
     this._base = x;
     return this;
   }
 
-  token(getToken) {
-    this._token = getToken;
-    return this;
+  bearerToken(
+    options: BearerTokenOptions | (() => BearerTokenOptions) = { token: '' }
+  ) {
+    this._bearerToken = options;
   }
 
-  headers(getHeaders) {
+  headers(getHeaders: any) {
     this._headers = getHeaders;
     return this;
   }
 
+  beforeRequest() {}
+
+  afterResponse() {}
+
   getHeaders() {
     let headers = {};
 
-    if (this._token) {
-      if (isFunction(this._token)) {
-        headers = { ...headers, Authorization: 'Bearer ' + this._token() };
-      } else {
-        headers = { ...headers, Authorization: 'Bearer ' + this._token };
-      }
+    if (this._headers) {
+      const hh = resolve(this._headers);
+      headers = { ...headers, ...hh };
     }
 
-    if (this._headers) {
-      if (isFunction(this._headers)) {
-        headers = { ...headers, ...this._headers() };
-      } else {
-        headers = { ...headers, ...this._headers };
-      }
+    if (this._bearerToken) {
+      const { prefix = 'Bearer', token } = resolve(this._bearerToken);
+      headers = { ...headers, Authorization: prefix + ' ' + token };
     }
+
     return headers;
   }
 
-  fetch(path, options) {
-    const req = fetch(`${this._base}${path}`, options).then((resp) => {
-      if (resp.status === 401) {
-        throw new Error('401');
-      } else if (!resp.ok) {
-        throw new Error('network error');
-      }
+  fetch(path: string, options: any = { headers: {} }) {
+    options.headers = {
+      ...options.headers,
+      ...this.getHeaders(),
+    };
 
-      return resp;
-    });
+    if (options.json) {
+      options.headers = {
+        ...options.headers,
+        'Content-Type': 'application/json',
+      };
+    }
+
+    const req = fetch(`${this._base}${path}`, options)
+      .then((resp) => {
+        if (resp.status < 200 || resp.status >= 300) {
+          throw new HTTPError(resp.status);
+        }
+        return resp;
+      })
+      .then((resp) => {
+        if (options.json) {
+          return resp.json().then((json) => ({
+            headers: resp.headers,
+            json,
+          }));
+        } else {
+          return resp;
+        }
+      });
 
     return Promise.race([req, timeout(this._timeout)]);
   }
 
-  get(path, params) {
-    const search = params ? `?${encode(compactParams(params))}` : '';
+  get(path: string, options?: any) {
+    const search = options.params
+      ? `?${encode(compactParams(options.params))}`
+      : '';
     return this.fetch(`${path}${search}`, {
+      ...options,
       method: 'GET',
-      headers: this.getHeaders(),
-    }).then((resp) => resp.json());
+    });
   }
 
-  post(path, params) {
-    return this.fetch(`${path}`, {
-      body: JSON.stringify(compactParams(params)),
+  post(path: string, options?: any) {
+    return this.fetch(path, {
+      ...options,
       method: 'POST',
-      headers: {
-        ...this.getHeaders(),
-        'Content-Type': 'application/json',
-      },
-    }).then((resp) => resp.json());
+    });
   }
 
-  put(path, params) {
-    return this.fetch(`${path}`, {
-      body: JSON.stringify(compactParams(params)),
+  put(path: string, options?: any) {
+    return this.fetch(path, {
+      ...options,
       method: 'PUT',
-      headers: {
-        ...this.getHeaders(),
-        'Content-Type': 'application/json',
-      },
-    }).then((resp) => resp.json());
+    });
   }
 
-  delete(path) {
-    return this.fetch(`${path}`, {
+  delete(path: string, options?: any) {
+    return this.fetch(path, {
+      ...options,
       method: 'DELETE',
-      headers: this.getHeaders(),
     });
   }
 }

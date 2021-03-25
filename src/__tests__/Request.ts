@@ -1,5 +1,4 @@
-import Request from '../request';
-import { compactParams } from '../utils';
+import { Request, encode, compactParams } from '../Request';
 
 test('constructor', () => {
   const req = new Request('https://api.github.com');
@@ -22,13 +21,13 @@ test('timeout', () => {
 
 test('token', () => {
   const req = new Request();
-  req.token('1');
+  req.bearerToken({ token: '1' });
 
   expect(req.getHeaders()).toEqual({
     Authorization: 'Bearer 1',
   });
 
-  req.token(() => '2');
+  req.bearerToken(() => ({ token: '2' }));
   expect(req.getHeaders()).toEqual({
     Authorization: 'Bearer 2',
   });
@@ -52,4 +51,16 @@ test('headers', () => {
 
 test('compactParams', () => {
   expect(compactParams({ a: 1, b: null })).toEqual({ a: 1 });
+});
+
+test('encode', () => {
+  expect(encode({ a: 12 })).toBe('a=12');
+});
+
+test('compactParams', () => {
+  expect(compactParams({ a: null, b: 0, c: true, d: 'test' })).toEqual({
+    b: 0,
+    d: 'test',
+    c: true,
+  });
 });
