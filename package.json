@@ -20,7 +20,6 @@
   "author": "Wang Zuo <wangzuo@swiftcarrot.com> (https://swiftcarrot.com/)",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.0",
     "@types/jest": "^26.0.21",

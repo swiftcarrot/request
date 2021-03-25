@@ -113,7 +113,7 @@ export class Request {
     return headers;
   }
 
-  fetch(path: string, options: any = { headers: {} }) {
+  fetch(path: string, options: any = { headers: {} }): any {
     options.headers = {
       ...options.headers,
       ...this.getHeaders(),
@@ -121,9 +121,9 @@ export class Request {
 
     if (options.json) {
       options.headers = {
-        ...options.headers,
         'Content-Type': 'application/json',
       };
+      options.body = JSON.stringify(options.json);
     }
 
     const req = fetch(`${this._base}${path}`, options)
@@ -147,31 +147,28 @@ export class Request {
     return Promise.race([req, timeout(this._timeout)]);
   }
 
-  get(path: string, options?: any) {
-    const search = options.params
-      ? `?${encode(compactParams(options.params))}`
-      : '';
+  get(path: string, params?: any): any {
+    const search = params ? `?${encode(compactParams(params))}` : '';
     return this.fetch(`${path}${search}`, {
-      ...options,
       method: 'GET',
-    });
+    }).then((resp: any) => resp.json());
   }
 
-  post(path: string, options?: any) {
+  post(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
       method: 'POST',
     });
   }
 
-  put(path: string, options?: any) {
+  put(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
       method: 'PUT',
     });
   }
 
-  delete(path: string, options?: any) {
+  delete(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
       method: 'DELETE',
