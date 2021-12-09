@@ -1,4 +1,4 @@
-import { Request, encode, compactParams } from '../Request';
+import { Request, encode, compactParams } from '../src';
 
 test('constructor', () => {
   const req = new Request('https://api.github.com');
@@ -24,28 +24,28 @@ test('token', () => {
   req.bearerToken({ token: '1' });
 
   expect(req.getHeaders()).toEqual({
-    Authorization: 'Bearer 1',
+    Authorization: 'Bearer 1'
   });
 
   req.bearerToken(() => ({ token: '2' }));
   expect(req.getHeaders()).toEqual({
-    Authorization: 'Bearer 2',
+    Authorization: 'Bearer 2'
   });
 });
 
 test('headers', () => {
   const req = new Request();
   req.headers(() => ({
-    locale: 'zh',
+    locale: 'zh'
   }));
 
   expect(req.getHeaders()).toEqual({
-    locale: 'zh',
+    locale: 'zh'
   });
 
   req.headers({ locale: 'en' });
   expect(req.getHeaders()).toEqual({
-    locale: 'en',
+    locale: 'en'
   });
 });
 
@@ -61,6 +61,6 @@ test('compactParams', () => {
   expect(compactParams({ a: null, b: 0, c: true, d: 'test' })).toEqual({
     b: 0,
     d: 'test',
-    c: true,
+    c: true
   });
 });
