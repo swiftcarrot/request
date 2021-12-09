@@ -33,7 +33,7 @@ export const timeout = (ms: number) => {
 };
 
 export const compactParams = (params: any) => {
-  return pickBy(params, (x) => !isNil(x));
+  return pickBy(params, x => !isNil(x));
 };
 
 export class HTTPError extends Error {
@@ -117,28 +117,28 @@ export class Request {
   fetch(path: string, options: any = { headers: {} }): any {
     options.headers = {
       ...options.headers,
-      ...this.getHeaders(),
+      ...this.getHeaders()
     };
 
     if (options.json) {
       options.headers = {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       };
       options.body = JSON.stringify(options.json);
     }
 
     const req = fetch(`${this._base}${path}`, options)
-      .then((resp) => {
+      .then(resp => {
         if (resp.status < 200 || resp.status >= 300) {
           throw new HTTPError(resp.status);
         }
         return resp;
       })
-      .then((resp) => {
+      .then(resp => {
         if (options.json) {
-          return resp.json().then((json) => ({
+          return resp.json().then(json => ({
             headers: resp.headers,
-            json,
+            json
           }));
         } else {
           return resp;
@@ -151,28 +151,28 @@ export class Request {
   get(path: string, params?: any): any {
     const search = params ? `?${encode(compactParams(params))}` : "";
     return this.fetch(`${path}${search}`, {
-      method: "GET",
+      method: "GET"
     }).then((resp: any) => resp.json());
   }
 
   post(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
-      method: "POST",
+      method: "POST"
     });
   }
 
   put(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
-      method: "PUT",
+      method: "PUT"
     });
   }
 
   delete(path: string, options?: any): any {
     return this.fetch(path, {
       ...options,
-      method: "DELETE",
+      method: "DELETE"
     });
   }
 }

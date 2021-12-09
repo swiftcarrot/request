@@ -11,23 +11,23 @@ request
 ### Usage
 
 ```javascript
-import Request from '@swiftcarrot/request';
+import Request from "@swiftcarrot/request";
 
-const request = new Request('https://api.example.com/v1')
+const request = new Request("https://api.example.com/v1")
   .timeout(5000)
   .bearerToken(() => {
-    token: window.localStorage.getItem('token');
+    token: window.localStorage.getItem("token");
   });
 
-request.get('/articles', { json: { page: 1 } });
+request.get("/articles", { json: { page: 1 } });
 request
-  .post('/login', { json: { name: 'test', password: '123' } })
+  .post("/login", { json: { name: "test", password: "123" } })
   .then(({ json }) => {
-    window.localStorage.setItem('token', json.token);
+    window.localStorage.setItem("token", json.token);
   });
-request.post('/articles', { json: { title: 'test' } });
-request.delete('/logout').then(() => {
-  window.localStoarge.removeItem('token');
+request.post("/articles", { json: { title: "test" } });
+request.delete("/logout").then(() => {
+  window.localStoarge.removeItem("token");
   request.bearerToken(null);
 });
 ```
@@ -35,11 +35,11 @@ request.delete('/logout').then(() => {
 ### JSON request
 
 ```javascript
-import Request from '@swiftcarrot/request';
+import Request from "@swiftcarrot/request";
 
-const request = new Request('/api/v1');
+const request = new Request("/api/v1");
 
-request.get('/articles', { json: { page: 1 } }).then((resp) => {
+request.get("/articles", { json: { page: 1 } }).then(resp => {
   console.log(resp.json);
 });
 ```
@@ -48,41 +48,41 @@ request.get('/articles', { json: { page: 1 } }).then((resp) => {
 
 ```javascript
 request.headers({
-  'content-type': 'application/json',
+  "content-type": "application/json"
 });
 
 request.headers(() => ({
-  'content-type': 'application/json',
+  "content-type": "application/json"
 }));
 ```
 
 ### Authentication with bearer token
 
 ```javascript
-import Request from '@swiftcarrot/request';
+import Request from "@swiftcarrot/request";
 
-const request = new Request('/api').bearerToken({
-  token: '<token>',
-  prefix: 'Bearer',
+const request = new Request("/api").bearerToken({
+  token: "<token>",
+  prefix: "Bearer"
 });
 
-const request = new Request('/api').bearerToken(() => ({
-  token: window.localStorage.getItem('token'),
-  prefix: 'Bearer',
+const request = new Request("/api").bearerToken(() => ({
+  token: window.localStorage.getItem("token"),
+  prefix: "Bearer"
 }));
 ```
 
 ### Error handling
 
 ```javascript
-const request = new Request('/api');
+const request = new Request("/api");
 ```
 
 ### add fetch Polyfill
 
 ```javascript
 // yarn add cross-fetch
-import 'cross-fetch/polyfill';
+import "cross-fetch/polyfill";
 ```
 
 ### License
