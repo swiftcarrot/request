@@ -39,7 +39,7 @@ import Request from "@swiftcarrot/request";
 
 const request = new Request("/api/v1");
 
-request.get("/articles", { json: { page: 1 } }).then(resp => {
+request.get("/articles", { json: { page: 1 } }).then((resp) => {
   console.log(resp.json);
 });
 ```
@@ -48,11 +48,11 @@ request.get("/articles", { json: { page: 1 } }).then(resp => {
 
 ```javascript
 request.headers({
-  "content-type": "application/json"
+  "content-type": "application/json",
 });
 
 request.headers(() => ({
-  "content-type": "application/json"
+  "content-type": "application/json",
 }));
 ```
 
@@ -63,12 +63,12 @@ import Request from "@swiftcarrot/request";
 
 const request = new Request("/api").bearerToken({
   token: "<token>",
-  prefix: "Bearer"
+  prefix: "Bearer",
 });
 
 const request = new Request("/api").bearerToken(() => ({
   token: window.localStorage.getItem("token"),
-  prefix: "Bearer"
+  prefix: "Bearer",
 }));
 ```
 
